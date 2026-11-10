@@ -1,0 +1,223 @@
+:root {
+  --bg: #ffffff;
+  --fg: #1a1a1a;
+  --muted: #6b6b6b;
+  --accent: #1a73e8;
+  --ctrl-bg: rgba(0, 0, 0, 0.06);
+  --ctrl-fg: #1a1a1a;
+}
+
+:root[data-theme="dark"] {
+  --bg: #0f0f10;
+  --fg: #f3f3f3;
+  --muted: #9a9a9a;
+  --accent: #8ab4f8;
+  --ctrl-bg: rgba(255, 255, 255, 0.1);
+  --ctrl-fg: #f3f3f3;
+}
+
+/* Chroma-key mode: a flat, solid color meant to be keyed out to transparent
+   by OBS / PowerPoint / a streaming or presentation tool — this page itself
+   is never actually transparent, a real browser window can't do that.
+   --bg and --fg here are overridden inline by display.js to match whatever
+   color the person picks; these are just the pre-JS / fallback values. */
+:root[data-theme="chroma"] {
+  --bg: #00ff00;
+  --fg: #111111;
+  --muted: #2a2a2a;
+  --accent: #1a73e8;
+  --ctrl-bg: rgba(0, 0, 0, 0.45);
+  --ctrl-fg: #ffffff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: "Google Sans", Roboto, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+  overflow: hidden;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+#stage {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6vh 6vw;
+}
+
+#text {
+  margin: 0;
+  text-align: center;
+  font-size: 64px;
+  line-height: 1.3;
+  font-weight: 500;
+  word-break: break-word;
+  white-space: pre-wrap;
+  max-width: 100%;
+}
+
+#text.state-idle,
+#text.state-loading {
+  color: var(--muted);
+  font-weight: 400;
+  font-size: clamp(20px, 3.4vw, 34px) !important;
+}
+
+#text.state-error {
+  color: #e05252;
+  font-weight: 400;
+  font-size: clamp(18px, 2.6vw, 28px) !important;
+  max-width: 60ch;
+}
+
+/* ---- Floating controls ---- */
+
+#controls {
+  position: fixed;
+  left: 50%;
+  bottom: 28px;
+  transform: translateX(-50%);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 10px 14px;
+  max-width: 94vw;
+  padding: 10px 16px;
+  border-radius: 24px;
+  background: var(--ctrl-bg);
+  backdrop-filter: blur(6px);
+  opacity: 1;
+  transition: opacity 0.35s ease;
+}
+
+#controls.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.ctrl-btn {
+  all: unset;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  color: var(--ctrl-fg);
+  cursor: pointer;
+}
+
+.ctrl-btn:hover {
+  background: rgba(128, 128, 128, 0.25);
+}
+
+.ctrl-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+.ctrl-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--ctrl-fg);
+}
+
+.ctrl-icon {
+  width: 16px;
+  height: 16px;
+  opacity: 0.8;
+}
+
+.ctrl-slider {
+  width: 120px;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+#chroma-color-group {
+  display: none; /* shown by display.js only while chroma theme is active */
+}
+
+#chroma-color-picker {
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  overflow: hidden;
+  cursor: pointer;
+  background: none;
+}
+
+#chroma-color-picker::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+#chroma-color-picker::-webkit-color-swatch {
+  border: 2px solid var(--ctrl-fg);
+  border-radius: 50%;
+}
+
+.ctrl-sep {
+  width: 1px;
+  height: 20px;
+  background: currentColor;
+  opacity: 0.2;
+}
+
+.ctrl-btn.active {
+  color: var(--accent);
+}
+
+/* Brief flash on the "Clear source" button so there's SOME feedback even
+   though this window can't see whether Google's page actually cleared. */
+@keyframes tdw-flash-ok {
+  0% { background: rgba(52, 168, 83, 0.6); }
+  100% { background: transparent; }
+}
+@keyframes tdw-flash-fail {
+  0% { background: rgba(234, 67, 53, 0.6); }
+  100% { background: transparent; }
+}
+#clear-source-btn.flash-ok {
+  animation: tdw-flash-ok 0.8s ease-out;
+}
+#clear-source-btn.flash-fail {
+  animation: tdw-flash-fail 0.8s ease-out;
+}
+
+/* ---- Credit ---- */
+
+#credit {
+  position: fixed;
+  left: 14px;
+  bottom: 10px;
+  font-size: 11px;
+  color: var(--muted);
+  text-decoration: none;
+  opacity: 0.7;
+  transition: opacity 0.35s ease;
+}
+
+#credit:hover {
+  opacity: 1;
+  text-decoration: underline;
+}
+
+#credit.hidden {
+  opacity: 0;
+  pointer-events: none;
+}

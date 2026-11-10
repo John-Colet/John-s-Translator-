@@ -1,0 +1,25 @@
+{
+  "manifest_version": 3,
+  "name": "Translate Display Window",
+  "version": "1.0.0",
+  "description": "Adds an Open Display button to Google Translate for a big, clean, live-updating view of just the translated text — perfect for a second monitor. © John Colet, john.colet.ca",
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://translate.google.com/*"],
+      "js": ["content.js"],
+      "css": ["content.css"],
+      "run_at": "document_idle"
+    }
+  ],
+  "permissions": ["windows", "storage"],
+  "host_permissions": ["https://translate.google.com/*"]
+}
